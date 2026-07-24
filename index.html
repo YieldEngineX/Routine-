@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>Liquid Glass To-Do Black - Final Fixed</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><style>
+
+*{font-family:Inter,sans-serif;box-sizing:border-box}
+html,body{margin:0;background:#000000 !important;color:#fff;overflow-x:hidden;overflow-y:auto;min-height:100vh;-webkit-font-smoothing:antialiased;background:#000000 !important;overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-behavior:smooth !important}
+button{transition:all 0.18s ease !important}
+html{overscroll-behavior:auto;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;background:#000 !important}
+#emojiSheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-behavior:smooth}
+#emojiGrid{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;overflow-y:auto !important;scroll-behavior:smooth;will-change:scroll-position}
+
+/* PURE BLACK THEME - NO WHITES, NO GLOSS */
+.glass{
+  position:relative;
+  background:#000000 !important;
+  border:1px solid #1a1a1a !important;
+  box-shadow:none !important;
+  border-radius:20px;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  transition:all 0.2s ease;
+  overflow:hidden
+}
+.glass::before,.glass::after{display:none !important}
+.glass-strong{
+  position:relative;
+  background:#000000 !important;
+  border:1px solid #1a1a1a !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  transition:all 0.2s ease;
+  overflow:hidden
+}
+.glass-strong::before,.glass-strong::after{display:none !important}
+.orb{display:none !important}
+.glass:hover{
+  background:#050505 !important;
+  border-color:#222 !important;
+  box-shadow:none !important;
+  transform:none;
+}
+.glass-strong:hover{
+  background:#000000 !important;
+  box-shadow:none !important;
+}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.clock-num{position:absolute;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transform:translate(-50%,-50%);font-weight:500;color:rgba(255,255,255,0.5);font-size:13px}
+.clock-num.active{background:#1a1a1a !important;color:#fff !important;border:1px solid #2a2a2a !important}
+.scrollbar-hide::-webkit-scrollbar{display:none}
+#taskList>div{
+  transition:transform 0.22s ease, opacity 0.2s ease;
+  will-change:transform, opacity;
+  backface-visibility:hidden;
+  touch-action:pan-y !important;
+  background:#000000 !important;
+  border:1px solid #1a1a1a !important;
+  box-shadow:none !important;
+}
+#taskList>div:active{transform:scale(0.98)}
+.task-checkbox{
+  appearance:none;-webkit-appearance:none;
+  width:26px;height:26px;min-width:26px;min-height:26px;
+  border:1.5px solid #222 !important;
+  border-radius:7px;
+  background:#000 !important;
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;
+  transition:all 0.18s ease;
+  flex-shrink:0;margin-top:2px;
+  box-shadow:none !important;
+}
+.task-checkbox:hover{border-color:#333 !important;background:#000 !important;transform:none}
+.task-checkbox:active{transform:scale(0.92)}
+.task-checkbox:checked{background:#1a1a1a !important;border-color:#333 !important;box-shadow:none !important}
+.task-checkbox:checked::after{content:'✓';color:#fff;font-size:14px;font-weight:700;line-height:1;display:block}
+.drag-handle{
+  width:34px;height:34px;min-width:34px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;letter-spacing:1px;
+  color:#333;
+  cursor:grab;border-radius:8px;
+  transition:all 0.18s ease;
+  user-select:none;touch-action:none;
+  background:transparent;
+}
+.drag-handle:hover{background:#111 !important;color:#555 !important}
+.drag-handle:active{cursor:grabbing;background:#151515 !important}
+@keyframes taskIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.task-click-animate{animation:none !important}
+#homeContent>div, #allView>div{transition:all 0.18s ease; will-change:auto; background:#000000 !important; border:1px solid #1a1a1a !important; box-shadow:none !important}
+#taskList>div.dragging{opacity:0.4 !important;transform:scale(0.97);box-shadow:none !important;background:#000 !important;border-color:#222 !important}
+#taskList>div.drag-over{transform:translateY(4px);border-color:#333 !important;box-shadow:none !important;background:#000 !important}
+.add-btn-glow{
+  background:#000000 !important;
+  box-shadow:none !important;
+  border:1px solid #222 !important;
+  backdrop-filter:none !important;
+}
+.add-btn-glow::before{display:none !important}
+.calendar-day{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;font-size:12px;transition:all 0.15s;background:transparent;border:1px solid transparent}
+.calendar-day:hover{background:#0a0a0a !important;border-color:#1a1a1a !important}
+.calendar-day.active{background:#1a1a1a !important;color:#fff !important;font-weight:600;border:1px solid #2a2a2a !important}
+.calendar-day.has-tasks{position:relative}
+.calendar-day.has-tasks::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;background:#444;border-radius:50%}
+.calendar-day.today{border:1px solid #222 !important}
+#homeView,#tasksView,#allView{overflow-y:visible;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-behavior:smooth !important}
+#taskList,#homeContent,#allView{overflow-y:visible;touch-action:pan-y;scroll-behavior:smooth !important}
+#allView{scroll-behavior:smooth !important;-webkit-overflow-scrolling:touch}
+#emojiSheet{scroll-behavior:smooth !important}
+/* force inputs pure black */
+input, textarea{background:#000000 !important; border:1px solid #1a1a1a !important; color:#fff !important}
+input::placeholder, textarea::placeholder{color:#555 !important}
+/* remove any white bg from sheets */
+#taskSheet, #prioritySheet, #emojiSheet, #clockSheet, #themeSheet, #weekSheet, #repeatSheet, #newTabSheet, #renameTabSheet, #overflowSheet, #tabSheet, #confirmDeleteSheet, #printOptionsSheet, #calendarSheet{
+ background:#000000 !important;
+ border-color:#1a1a1a !important;
+ box-shadow:none !important;
+}
+/* smooth scroll fix */
+html{scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+body{-webkit-overflow-scrolling:touch;scroll-behavior:smooth;overscroll-behavior-y:auto}
+
+</style>
+<style id="print-fix">
+#printableTaskList{display:none}
+#printIframe{position:absolute;left:-9999px;top:-9999px;width:0;height:0;border:0;opacity:0}
+@media print{
+  @page{margin:12mm 10mm 12mm 10mm; size:A4;}
+  html,body{background:#fff !important;color:#000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; overflow:visible !important; height:auto !important;}
+  body > div:not(#printableTaskList), #overlay, #taskSheet, #prioritySheet, #emojiSheet, #clockSheet, #themeSheet, #weekSheet, #repeatSheet, #newTabSheet, #renameTabSheet, #overflowSheet, #tabSheet, #confirmDeleteSheet, #printOptionsSheet, #calendarSheet{ display:none !important; visibility:hidden !important; }
+  #printableTaskList{display:block !important;position:static !important;left:0 !important;top:0 !important;width:100% !important;max-width:100% !important;background:#fff !important;color:#000 !important;padding:0 !important;margin:0 !important;z-index:999999 !important;visibility:visible !important; opacity:1 !important;}
+  #printableTaskList *{visibility:visible !important;}
+}
+/* screen preview hidden */
+.print-header{font-family:Inter,Arial,sans-serif}
+</style>
+
+</head>
+<body>
+<div style="position:fixed;inset:0;overflow:hidden;pointer-events:none;background:#000000"><div class="orb" style="display:none"></div></div>
+<div style="position:relative;max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column">
+<div style="position:sticky;top:0;z-index:20" class="glass-strong px-3 py-3 flex items-center gap-2"><div id="tabs" class="flex gap-2 flex-1 overflow-x-auto scrollbar-hide"></div><button onclick="openOverflow()" style="width:32px;height:32px;position:relative;z-index:20" class="shrink-0 rounded-full glass flex items-center justify-center">⋯</button><button onclick="openNewTabSheet()" style="width:32px;height:32px;position:relative;z-index:30" class="shrink-0 rounded-full glass flex items-center justify-center">+</button><button onclick="openTabManager()" style="width:32px;height:32px;position:relative;z-index:20" class="shrink-0 rounded-full glass flex items-center justify-center">☰</button></div>
+<div class="px-5 pt-6 flex items-center"><button onclick="openCalendarPicker()" class="text-[19px] font-medium flex items-center gap-2"><span id="dateLabel"></span><span style="font-size:11px;color:rgba(255,255,255,0.35)">▼</span></button></div>
+<div class="px-5 mt-2"></div>
+<div id="homeView" class="flex-1"><div id="homeContent" class="px-4 mt-5 pb-32 space-y-3"></div></div>
+<div id="tasksView" class="hidden flex-1"><div id="taskList" class="px-4 mt-5 pb-32 space-y-3"></div></div>
+<div id="allView" class="hidden px-4 mt-5 pb-32 space-y-3"></div>
+<div id="settingsView" class="hidden px-5 mt-5 pb-32 space-y-4"></div>
+<div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-[400px] glass-strong rounded-[28px] px-2 py-3 flex justify-around items-center" style="height:72px"><button onclick="switchView('home')" class="nav-btn flex flex-col items-center justify-center gap-1 px-3 py-1" data-view="home" style="height:48px"><span style="font-size:18px;line-height:1">⌂</span><span style="font-size:9px;margin-top:2px">HOME</span></button><button onclick="switchView('tasks')" class="nav-btn flex flex-col items-center justify-center gap-1 px-3 py-1" data-view="tasks" style="height:48px"><span style="font-size:18px;line-height:1">☑</span><span style="font-size:9px;margin-top:2px">TASKS</span></button><button onclick="openTaskSheet()" style="width:64px;height:64px;margin-top:0;position:relative;top:0;display:flex;align-items:center;justify-content:center" class="rounded-full add-btn-glow hover:scale-105 active:scale-95 transition-all duration-300" id="mainAddBtn"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" style="display:block"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><button onclick="switchView('all')" class="nav-btn flex flex-col items-center justify-center gap-1 px-3 py-1" data-view="all" style="height:48px"><span style="font-size:18px;line-height:1">◧</span><span style="font-size:9px;margin-top:2px">ALL</span></button><button onclick="switchView('settings')" class="nav-btn flex flex-col items-center justify-center gap-1 px-3 py-1" data-view="settings" style="height:48px"><span style="font-size:18px;line-height:1">⚙</span><span style="font-size:9px;margin-top:2px">SETTINGS</span></button></div>
+</div>
+<div id="overlay" class="fixed inset-0 z-40 hidden bg-black/80" onclick="closeAll()"></div>
+<div id="taskSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-50 hidden glass-strong rounded-t-[32px] p-6 max-h-[92vh] overflow-y-auto"><div style="width:36px;height:4px;background:rgba(255,255,255,0.18);border-radius:10px;margin:0 auto 16px"></div><div class="flex justify-between items-center mb-5"><h3 id="taskSheetTitle" class="text-[16px] font-medium">NEW TASK</h3><button onclick="closeAll()" class="w-8 h-8 rounded-full glass">✕</button></div><div class="space-y-4"><label class="text-[10px] text-white/40 ml-1">NAME</label><input id="taskInput" placeholder="Task name..." class="w-full glass rounded-2xl px-4 py-4 outline-none bg-black -mt-2 text-[14px]"><div class="grid grid-cols-2 gap-3"><div><label class="text-[9px] text-white/35 ml-1">START TIME</label><button onclick="openClock('start')" class="w-full glass rounded-2xl px-4 py-3 flex justify-between items-center mt-1"><span class="text-[11px]">Start</span><span id="startLabel" class="text-white/40 text-[11px]">—</span></button></div><div><label class="text-[9px] text-white/35 ml-1">END TIME</label><button onclick="openClock('end')" class="w-full glass rounded-2xl px-4 py-3 flex justify-between items-center mt-1"><span class="text-[11px]">End</span><span id="endLabel" class="text-white/40 text-[11px]">—</span></button></div></div><button onclick="openPriority()" class="w-full glass rounded-2xl px-4 py-3 flex justify-between"><span class="flex items-center gap-2 text-[11px]"><span id="pDot" class="dot" style="background:#6b7280"></span>PRIORITY</span><span id="pLabel" class="text-white/40 text-[11px]">None ▾</span></button><button onclick="openEmoji()" class="w-full glass rounded-2xl px-4 py-3 flex justify-between"><span class="text-[11px]">EMOJI</span><span id="eLabel" class="text-white/40 text-[11px]">None ▾</span></button><button onclick="openRepeatSheet()" class="w-full glass rounded-2xl px-4 py-3 flex justify-between"><span class="text-[11px]">REPEAT TASK</span><span id="repeatLabel" class="text-white/40 text-[11px]">No Repeat ▾</span></button><div><label class="text-[9px] text-white/35 ml-1">NOTES</label><textarea id="notesInput" placeholder="Details..." class="w-full glass rounded-2xl px-4 py-3 outline-none bg-black min-h-[64px] mt-1 text-[13px]"></textarea></div><button id="delBtn" onclick="deleteCurrent()" class="w-full glass rounded-2xl px-4 py-3 text-[#ff4444] hidden text-[11px]">DELETE</button><button onclick="saveTask()" class="w-full glass rounded-2xl py-4 font-medium text-[12px] mt-1">SAVE TASK</button></div></div>
+<div id="prioritySheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[60] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-4 text-[13px]">PRIORITY</h3><div id="priorityList" class="space-y-2"></div></div>
+<div id="emojiSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[60] hidden glass-strong rounded-t-[32px] p-4 max-h-[85vh] flex flex-col"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 12px"></div><input id="emojiSearch" placeholder="Search emoji" class="glass rounded-xl px-4 py-3 mb-3 outline-none w-full" oninput="filterEmoji(this.value)"><div id="emojiCats" class="flex gap-1.5 overflow-x-auto mb-3 scrollbar-hide"></div><div id="emojiGrid" class="grid grid-cols-8 gap-1 overflow-y-auto" style="max-height:360px"></div></div>
+<div id="clockSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[60] hidden glass-strong rounded-t-[32px] p-6 flex flex-col items-center"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><div id="clockDisplay" class="flex items-center justify-center gap-1 text-[30px] font-medium mb-2"><span id="clockHourSpan" onclick="setClockMode('hour')" class="cursor-pointer px-3 py-1 rounded-xl transition-all"></span><span>:</span><span id="clockMinSpan" onclick="setClockMode('minute')" class="cursor-pointer px-3 py-1 rounded-xl transition-all"></span><span id="clockAPDisplay" class="text-[14px] ml-2 opacity-60"></span></div><div class="text-[10px] text-white/30 mb-3 tracking-widest" id="clockModeHint">SELECT HOUR</div><div class="flex gap-2 mb-4 w-full max-w-[260px]"><button id="ampmAM" onclick="setClockAP('AM')" class="flex-1 glass rounded-xl py-2.5 text-[12px] font-medium transition-all">AM</button><button id="ampmPM" onclick="setClockAP('PM')" class="flex-1 glass rounded-xl py-2.5 text-[12px] font-medium transition-all">PM</button></div><div id="clockDial" class="relative w-[260px] h-[260px] rounded-full glass"></div><div class="flex gap-3 mt-6 w-full"><button onclick="closeClock()" class="flex-1 glass rounded-2xl py-3 text-[12px]">CANCEL</button><button onclick="confirmClock()" class="flex-1 glass rounded-2xl py-3 text-[12px] bg-[#111]">OK</button></div></div>
+<div id="themeSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[65] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-1 text-[13px]">THEME</h3><div id="themeOptions" class="space-y-2 mt-4"></div></div>
+<div id="weekSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[65] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-1 text-[13px]">WEEK START</h3><div id="weekOptions" class="space-y-2 mt-4"></div></div>
+<div id="repeatSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[65] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-1 text-[13px]">REPEAT TASK</h3><div id="repeatOptions" class="space-y-2 mt-4"></div></div>
+<div id="newTabSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[60] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-1 text-[13px]">NEW LIST TAB</h3><p class="text-[10px] text-white/30 mb-4">Select dot color + name</p><div class="mb-4"><div class="text-[10px] text-white/40 mb-2">DOT COLOR</div><div id="newTabColors" class="flex flex-wrap gap-3"></div></div><div class="mb-5"><div class="text-[10px] text-white/40 mb-2">TAB NAME</div><input id="newTabNameInput" placeholder="Eg: Work, Home..." class="w-full glass rounded-2xl px-4 py-3.5 outline-none bg-black text-[13px]"></div><div class="flex gap-3"><button onclick="closeAll()" class="flex-1 glass rounded-2xl py-3 text-[12px]">CANCEL</button><button onclick="confirmAddTab()" class="flex-1 glass rounded-2xl py-3 text-[12px] font-medium">CREATE TAB</button></div></div>
+<div id="renameTabSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[62] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-1 text-[13px]">RENAME TAB</h3><p class="text-[10px] text-white/30 mb-4">Enter new name for this list</p><div class="mb-5"><input id="renameTabInput" placeholder="Tab name..." class="w-full glass rounded-2xl px-4 py-3.5 outline-none bg-[#1a1a1a]/[0.06] text-[13px] border border-white/10"></div><div class="flex gap-3"><button onclick="closeAll()" class="flex-1 glass rounded-2xl py-3 text-[12px]">CANCEL</button><button onclick="confirmRenameTab()" class="flex-1 glass rounded-2xl py-3 text-[12px] font-medium">RENAME</button></div></div>
+<div id="overflowSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-50 hidden glass-strong rounded-t-[32px] p-5 max-h-[80vh] overflow-y-auto"></div>
+<div id="tabSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-50 hidden glass-strong rounded-t-[32px] p-6 max-h-[80vh] overflow-y-auto"></div>
+<div id="confirmDeleteSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[70] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(255,68,68,0.15);border:1px solid rgba(255,68,68,0.3)">⚠</div><h3 id="confirmDeleteTitle" class="text-[14px] font-medium">Confirm Delete</h3></div><p id="confirmDeleteMsg" class="text-[12px] text-white/60 leading-[1.5] mb-6">Are you sure?</p><div class="flex gap-3"><button onclick="closeConfirmDelete()" class="flex-1 glass rounded-2xl py-3.5 text-[12px]">CANCEL</button><button id="confirmDeleteBtn" onclick="executeConfirmDelete()" class="flex-1 rounded-2xl py-3.5 text-[12px] font-medium text-white" style="background:#ff4444;box-shadow:0 8px 24px rgba(255,68,68,0.3)">DELETE</button></div></div>
+<div id="printOptionsSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[65] hidden glass-strong rounded-t-[32px] p-6"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-1 text-[14px]">Task List</h3><p class="text-[11px] text-white/40 mb-5">Printing options</p><div class="space-y-2"><button onclick="doPrintTaskList()" class="w-full glass rounded-2xl px-4 py-4 flex justify-between items-center text-[12px] bg-[#111] hover:bg-[#1a1a1a]"><span>🖨️ PRINT TASK LIST</span><span>›</span></button><button onclick="doPrintMonthReport()" class="w-full glass rounded-2xl px-4 py-4 flex justify-between items-center text-[12px] bg-[#111] hover:bg-[#1a1a1a]"><span>📅 ONE MONTH REPORT AS PDF</span><span>›</span></button><button onclick="doSharePDF()" class="w-full glass rounded-2xl px-4 py-4 flex justify-between items-center text-[12px] hover:bg-[#111]"><span>📄 SHARE PDF</span><span>›</span></button><button onclick="closeAll()" class="w-full glass rounded-2xl py-3 mt-3 text-[12px] text-white/50">CANCEL</button></div></div>
+<div id="calendarSheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[65] hidden glass-strong rounded-t-[32px] p-6 max-h-[85vh] overflow-y-auto"><div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><div class="flex justify-between items-center mb-4"><h3 class="font-medium text-[14px]">SELECT DATE • History Check</h3><button onclick="closeAll()" class="w-8 h-8 rounded-full glass text-[12px]">✕</button></div><div class="flex justify-between items-center mb-4"><button onclick="changeCalMonth(-1)" class="w-8 h-8 rounded-full glass">‹</button><span id="calMonthLabel" class="text-[13px] font-medium"></span><button onclick="changeCalMonth(1)" class="w-8 h-8 rounded-full glass">›</button></div><div class="grid grid-cols-7 gap-1 mb-2 text-[10px] text-white/30 text-center"><div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div></div><div id="calGrid" class="grid grid-cols-7 gap-1"></div><div class="mt-6 pt-4 border-t border-white/10"><div class="text-[10px] text-white/30 mb-2">QUICK JUMP</div><div class="flex gap-2"><button onclick="jumpToDate('today')" class="glass rounded-full px-4 py-2 text-[11px]">Today</button><button onclick="jumpToDate('yesterday')" class="glass rounded-full px-4 py-2 text-[11px]">Yesterday</button><button onclick="jumpToDate('tomorrow')" class="glass rounded-full px-4 py-2 text-[11px]">Tomorrow</button></div></div></div>
+<script>
+let tabColors=['#5B7FFF','#22c55e','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#10b981'];
+let tabs=JSON.parse(localStorage.getItem('ltabs2')||'[{"id":"1","name":"Work","color":"#5B7FFF"},{"id":"2","name":"Home","color":"#22c55e"}]');
+let savedActiveTab = localStorage.getItem('lactiveTab');
+let activeTab = (savedActiveTab && tabs.some(t=>t.id===savedActiveTab)) ? savedActiveTab : tabs[0].id;
+let savedView = localStorage.getItem('lcurrentView');
+let currentView = savedView || 'home';
+let selectedDate=new Date();
+let savedDate = localStorage.getItem('lselectedDate');
+if(savedDate){
+  try{
+    let sd=new Date(savedDate);
+    if(!isNaN(sd.getTime())){
+      let todayK = new Date().toISOString().split('T')[0];
+      let sdK = sd.toISOString().split('T')[0];
+      // keep saved date only if it's today, otherwise force today for daily update
+      if(sdK === todayK){
+        selectedDate=sd;
+      } else {
+        // if saved date is different, check if user explicitly navigated today? We reset to today to fix daily update bug
+        selectedDate=new Date();
+        localStorage.setItem('lselectedDate', selectedDate.toISOString());
+      }
+    }
+  }catch(e){}
+}
+let tasks=JSON.parse(localStorage.getItem('ltasks2')||'{}');
+let editingId=null;let tempP='none',tempE='',tempS='',tempE2='',tempRepeat='none';
+let clockMode='hour',clockH=12,clockM=0,clockAP='AM',clockTarget='start';
+const priorities=[{id:'none',label:'None',dot:'#6b7280'},{id:'low',label:'Low',dot:'#22c55e'},{id:'medium',label:'Medium',dot:'#3b82f6'},{id:'high',label:'High',dot:'#eab308'},{id:'mandatory',label:'Mandatory',dot:'#ef4444'}];
+const allEmojis={
+Smileys:["😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🥸","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠","😈","👿","👹","👺","🤡","💩","👻","💀","☠️","👽","👾","🤖","🎃"],
+People:["👋","🤚","🖐️","✋","🖖","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","👊","✊","🤛","🤜","👏","🙌","🫶","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦿","🦵","🦶","👂","🦻","👃","🧠","🫀","🫁","🦷","🦴","👀","👁️","👅","👄","👶","🧒","👦","👧","🧑","👱","👨","🧔","👩","🧓","👴","👵","🙍","🙎","🙅","🙆","💁","🙋","🧏","🙇","🤦","🤷","👮","🕵️","💂","🥷","👷","🤴","👸","👳","👲","🧕","🤵","👰","🤰","🫃","🫄","🤱","👩‍🍼","👨‍🍼","🧑‍🍼","👼","🎅","🤶","🦸","🦹","🧙","🧚","🧛","🧜","🧝","🧞","🧟","💆","💇","🚶","🧍","🧎","🏃","💃","🕺","🕴️","👯","🧖","🧗","🤺","🏇","⛷️","🏂","🏌️","🏄","🚣","🏊","⛹️","🏋️","🚴","🚵","🤸","🤼","🤽","🤾","🤹","🧘","🛀","🛌"],
+Animals:["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁","🐮","🐷","🐽","🐸","🐵","🙈","🙉","🙊","🐒","🐔","🐧","🐦","🐤","🐣","🐥","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🪱","🐛","🦋","🐌","🐞","🐜","🪾","🦟","🦗","🪳","🕷️","🕸️","🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🦣","🐘","🦛","🦏","🐪","🐫","🦒","🦘","🦬","🐃","🐂","🐄","🐎","🐖","🐏","🐑","🦙","🐐","🦌","🐕","🐩","🦮","🐕‍🦺","🐈","🐈‍⬛","🪶","🐓","🦃","🦤","🦚","🦜","🦢","🦩","🕊️","🐇","🦝","🦨","🦡","🦫","🦦","🦥","🐁","🐀","🐿️","🦔"],
+Food:["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍅","🍆","🥑","🥦","🥬","🥒","🌶️","🫑","🌽","🥕","🫒","🧄","🧅","🥔","🍠","🥐","🥯","🍞","🥖","🥨","🧀","🥚","🍳","🧈","🥞","🧇","🥓","🥩","🍗","🍖","🦴","🌭","🍔","🍟","🍕","🫓","🥪","🥙","🧆","🌮","🌯","🫔","🥗","🥘","🫕","🥫","🍝","🍜","🍲","🍛","🍣","🍱","🥟","🦪","🍤","🍙","🍚","🍘","🍥","🥠","🥮","🍢","🍡","🍧","🍨","🍦","🥧","🧁","🍰","🎂","🍮","🍭","🍬","🍫","🍿","🍩","🍪","🌰","🥜","🍯","🥛","🍼","🫖","☕","🍵","🧃","🥤","🧋","🍶","🍺","🍻","🥂","🍷","🥃","🍸","🍹","🧉","🍾","🧊","🥄","🍴","🍽️","🥣","🥡","🥢","🧂"],
+Travel:["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","🦯","🦽","🦼","🛴","🚲","🛵","🏍️","🛺","🚨","🚔","🚍","🚘","🚖","🚡","🚠","🚟","🚃","🚋","🚞","🚝","🚄","🚅","🚈","🚂","🚆","🚇","🚊","🚉","✈️","🛫","🛬","🛩️","💺","🚁","🚟","🚠","🛰️","🚀","🛸","⛵","🛥️","🚤","⛴️","🛳️","🚢","⚓","🪝","⛽","🚧","🚦","🚥","🗺️","🗼","🏰","🏯","🏟️","🎡","🎢","🎠","⛲","⛱️","🏖️","🏝️","🏜️","🌋","⛰️","🏔️","🗻","🏕️","⛺","🏠","🏡","🏘️","🏚️","🏗️","🏭","🏢","🏬","🏣","🏤","🏥","🏦","🏨","🏪","🏫","🏩","💒","🏛️","⛪","🕌","🛕","🕍","⛩️","🕋","🌁","🌃","🏙️","🌄","🌅","🌆","🌇","🌉","♨️","🎑","🌌","🎆","🎇","🗾"],
+Activities:["⚽","⚾","🥎","🏀","🏐","🏈","🏉","🎾","🥏","🎳","🏏","🏑","🏒","🥍","🏓","🏸","🥊","🥋","🥅","⛳","⛸️","🎣","🤿","🎽","🎿","🛷","🥌","🎯","🪀","🪁","🎱","🔮","🪄","🧿","🎮","🕹️","🎰","🎲","🧩","🧸","🪅","🪩","🪆","♠️","♥️","♦️","♣️","♟️","🃏","🀄","🎴","🎭","🖼️","🎨","🧵","🪡","🧶","🪢"],
+Objects:["⌚","📱","💻","⌨️","🖥️","🖨️","🖱️","🖲️","🕹️","🗜️","💽","💾","💿","📀","📼","📷","📸","📹","🎥","📽️","🎞️","📞","☎️","📟","📠","📺","📻","🎙️","🎚️","🎛️","🧭","⏱️","⏲️","⏰","🕰️","⌛","⏳","📡","🔋","🔌","💡","🔦","🕯️","🪔","🧯","🛢️","💸","💵","💴","💶","💷","🪙","💰","💳","💎","⚖️","🪜","🧰","🪛","🔧","🔨","⚒️","🛠️","⛏️","🪚","🔩","⚙️","🪤","🧱","⛓️","🧲","🔫","💣","🧨","🪓","🔪","🗡️","⚔️","🛡️","🚬","⚰️","🪦","⚱️","🏺","🔮","📿","🧿","💈","⚗️","🔭","🔬","🕳️","🩹","🩺","💊","💉","🩸","🧬","🦠","🧫","🧪","🌡️","🧹","🪠","🧺","🧻","🚽","🚰","🚿","🛁","🛀","🧼","🪥","🪒","🧽","🪣","🧴","🛎️","🔑","🗝️","🚪","🪑","🛋️","🛏️","🖼️","🧾","🪞","🪟","🛍️","🎁","🎈","🎏","🎀","🪄","🪅","🎊","🎉","🎎","🏮","🎐","🧧","✉️","📩","📨","📧","💌","📥","📤","📦","🏷️","🪧","📪","📫","📬","📭","📮","📯","📜","📃","📄","📑","🧾","📊","📈","📉","🗒️","🗓️","📆","📅","🗑️","📇","🗃️","🗂️","📋","📌","📍","📎","🖇️","📏","📐","✂️","🗄️","🗑️","🔒","🔓","🔏","🔐"],
+Symbols:["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❣️","💕","💞","💓","💗","💖","💘","💝","💟","☮️","✝️","☪️","🕉️","☸️","✡️","🔯","🕎","☯️","☦️","🛐","⛎","♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓","🆔","⚛️","☢️","☣️","📴","📳","🈶","🈚","🈸","🈺","🈷️","✴️","🆚","💮","🉐","㊙️","㊗️","🈴","🈵","🈹","🈲","🅰️","🅱️","🆎","🆑","🅾️","🆘","❌","⭕","🛑","⛔","📛","🚫","💯","💢","♨️","🚷","🚯","🚳","🚱","🔞","📵","🚭","❗","❕","❓","❔","‼️","⁉️","🔅","🔆","〽️","⚠️","🚸","🔱","⚜️","🔰","♻️","✅","🈯","💹","❇️","✳️","❎","🌐","💠","Ⓜ️","🌀","💤","🏧","🚾","♿","🅿️","🛗","🚹","🚺","🚼","⚧️","🚻","🚮","🎦","📶","🔣","ℹ️","🔤","🔡","🔠","🆖","🆗","🆙","🆒","🆕","🆓","0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","🔢","#️⃣","*️⃣","⏏️","▶️","⏸️","⏯️","⏹️","⏺️","⏭️","⏮️","⏩","⏪","⏫","⏬","◀️","🔼","🔽","➡️","⬅️","⬆️","⬇️","↗️","↘️","↙️","↖️","↕️","↔️","↪️","↩️","⤴️","⤵️","🔀","🔁","🔂","🔄","🔃","🎵","🎶","➕","➖","➗","✖️","♾️","💲","💱","™️","©️","®️","〰️","➰","➿","🔚","🔙","🔛","🔝","🔜","✔️","☑️","🔘","🔴","🟠","🟡","🟢","🔵","🟣","⚫","⚪","🟤","🔺","🔻","🔸","🔹","🔶","🔷","🔳","🔲","▪️","▫️","◾","◽","◼️","◻️","🟥","🟧","🟨","🟩","🟦","🟪","⬛","⬜","🟫","🔈","🔇","🔉","🔊","🔔","🔕","📣","📢","💬","💭","🕐","🕑","🕒","🕓","🕔","🕕","🕖","🕗","🕘","🕙","🕚","🕛"],
+Flags:["🏳️","🏴","🏁","🚩","🏳️‍🌈","🏳️‍⚧️","🇮🇳","🇺🇸","🇬🇧","🇦🇪","🇦🇺","🇧🇷","🇨🇦","🇩🇪","🇫🇷","🇮🇹","🇯🇵","🇰🇷","🇷🇺","🇸🇦","🇿🇦","🇪🇸","🇲🇽","🇳🇵","🇵🇰","🇧🇩","🇱🇰","🇲🇾","🇸🇬","🇹🇭","🇮🇩","🇵🇭","🇻🇳","🇳🇿","🇳🇱","🇧🇪","🇨🇭","🇸🇪","🇳🇴","🇩🇰","🇫🇮","🇵🇱","🇺🇦","🇹🇷","🇪🇬","🇰🇪","🇳🇬","🇦🇷","🇨🇱","🇨🇴","🇵🇪"]
+};
+let curCat='Smileys';let curTheme='Dark';localStorage.setItem('ltheme','Dark');let curWeek=localStorage.getItem('lweek')||'Sunday';
+let tempNewTabColor=tabColors[0];let tempRenameId=null;let calCurrentMonth=new Date();
+function save(){localStorage.setItem('ltabs2',JSON.stringify(tabs));localStorage.setItem('ltasks2',JSON.stringify(tasks));localStorage.setItem('lactiveTab',activeTab);localStorage.setItem('lcurrentView',currentView);try{localStorage.setItem('lselectedDate',selectedDate.toISOString());}catch(e){}}
+function keyOf(d){let dt=new Date(d);let y=dt.getFullYear();let m=String(dt.getMonth()+1).padStart(2,'0');let day=String(dt.getDate()).padStart(2,'0');return y+'-'+m+'-'+day}
+function dateStr(d){return d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric'})}
+function dateStrFull(d){return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}
+function tKey(){return activeTab+'_'+keyOf(selectedDate)}
+function applyTheme(theme){const prefersDark=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; let isLight=(theme==='Light' || (theme==='Auto' && !prefersDark)); if(isLight){document.body.style.background='#f5f5f7';document.body.style.color='#111';document.documentElement.style.background='#f5f5f7';} else{document.body.style.background='#000000';document.body.style.color='#fff';document.documentElement.style.background='#000000';} curTheme=theme;localStorage.setItem('ltheme',theme);}
+if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(curTheme==='Auto')applyTheme('Auto')})}
+function renderTabs(){document.getElementById('tabs').innerHTML=tabs.map(t=>`<button onclick="setActiveTab('${t.id}')" class="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium flex items-center gap-2 ${activeTab===t.id?'glass-strong bg-[#111]':'glass opacity-60'}"><span style="width:7px;height:7px;border-radius:50%;background:${t.color};display:inline-block"></span>${t.name}</button>`).join('');document.getElementById('dateLabel').innerText=dateStr(selectedDate)}
+function setActiveTab(id){activeTab=id;localStorage.setItem('lactiveTab',activeTab);render()}
+let draggedId=null;
+function dragStart(e){draggedId=e.currentTarget.dataset.id;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move'}
+function dragOver(e){try{e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('drag-over');}catch(err){}}
+function dragEnd(e){try{e.currentTarget.classList.remove('dragging'); e.currentTarget.style.opacity=''; document.querySelectorAll('#taskList>div').forEach(d=>{d.classList.remove('drag-over','dragging'); d.style.opacity='';});}catch(err){}}
+function dropTask(e){try{e.preventDefault(); e.stopPropagation(); let targetId=e.currentTarget.dataset.id; e.currentTarget.classList.remove('drag-over'); if(!draggedId || draggedId===targetId) return; let list=tasks[tKey()]||[]; let from=list.findIndex(t=>t.id===draggedId); let to=list.findIndex(t=>t.id===targetId); if(from===-1||to===-1) return; let item=list.splice(from,1)[0]; list.splice(to,0,item); tasks[tKey()]=list; save(); render();}catch(err){console.warn('Drop glitch recovered',err);} finally { draggedId=null; }}
+function render(){
+  renderTabs();
+  let list=tasks[tKey()]||[];let total=list.length;let done=list.filter(t=>t.completed).length;
+  // FIXED: overview per active tab only (not all tabs)
+  let allTasksCount=0;let allDone=0;
+  Object.keys(tasks).forEach(k=>{ if(k.startsWith(activeTab+'_')){ allTasksCount+=tasks[k].length; allDone+=tasks[k].filter(t=>t.completed).length; } });
+  // --- weekly data for graph - per active tab ---
+  let weekData=[];
+  for(let i=6;i>=0;i--){
+    let d=new Date();d.setDate(d.getDate()-i);
+    let k=keyOf(d);
+    let tkKey=activeTab+'_'+k;
+    let count=(tasks[tkKey]||[]).length;
+    let dcount=(tasks[tkKey]||[]).filter(x=>x.completed).length;
+    weekData.push({label:d.toLocaleDateString('en-US',{weekday:'short'}).slice(0,2), date:k, total:count, done:dcount});
+  }
+  let maxW=Math.max(1,...weekData.map(w=>w.total));
+  let homeOverview=`<div class="space-y-4"><div class="glass rounded-[20px] p-5"><div class="text-[10px] text-white/30 tracking-[1px] mb-2">TODAY OVERVIEW</div><div class="text-[18px] font-medium">${dateStrFull(selectedDate)}</div><div class="grid grid-cols-3 gap-3 mt-5 text-center"><div class="glass rounded-xl py-3"><div class="text-[20px] font-semibold">${allTasksCount}</div><div class="text-[9px] text-white/30 mt-1">TOTAL TASKS</div></div><div class="glass rounded-xl py-3"><div class="text-[20px] font-semibold text-[#f59e0b]">${allTasksCount-allDone}</div><div class="text-[9px] text-white/30 mt-1">PENDING</div></div><div class="glass rounded-xl py-3"><div class="text-[20px] font-semibold text-[#22c55e]">${allDone}</div><div class="text-[9px] text-white/30 mt-1">DONE</div></div></div></div><div class="glass rounded-[20px] p-5"><div class="flex justify-between items-center mb-4"><div class="text-[10px] text-white/30 tracking-[1px]">WEEKLY DATA GRAPH</div><div class="text-[10px] text-white/20">${weekData[0].date} - ${weekData[6].date}</div></div><div style="height:140px;position:relative"><canvas id="homeChart" width="320" height="140" style="width:100%;height:140px"></canvas></div><div class="grid grid-cols-7 gap-1 mt-3 text-center">${weekData.map(w=>`<div><div class="text-[10px] text-white/30">${w.label}</div><div class="text-[9px] text-white/20 mt-1">${w.total}</div></div>`).join('')}</div><div class="flex gap-3 mt-4"><div class="flex items-center gap-1.5"><span style="width:8px;height:8px;background:#5B7FFF;border-radius:2px;display:inline-block"></span><span class="text-[9px] text-white/40">Total</span></div><div class="flex items-center gap-1.5"><span style="width:8px;height:8px;background:#22c55e;border-radius:2px;display:inline-block"></span><span class="text-[9px] text-white/40">Done</span></div></div></div><div class="glass rounded-[20px] p-5"><div class="text-[10px] text-white/30 tracking-[1px] mb-3">DASHBOARD</div><div class="space-y-3"><div class="flex justify-between items-center"><span class="text-[12px] text-white/60">Active Tabs</span><span class="text-[13px]">${tabs.length}</span></div><div class="flex justify-between items-center"><span class="text-[12px] text-white/60">Selected Date</span><span class="text-[12px]">${keyOf(selectedDate)}</span></div><div class="flex justify-between items-center"><span class="text-[12px] text-white/60">Week Starts On</span><span class="text-[12px]">${curWeek}</span></div></div></div><div class="glass rounded-[20px] p-5"><div class="text-[10px] text-white/30 tracking-[1px] mb-3">HABITS TRACKING</div><div class="grid grid-cols-2 gap-3"><div class="glass rounded-xl p-3"><div class="text-[11px] text-white/40">Completion Rate</div><div class="text-[16px] font-medium mt-1">${allTasksCount>0?Math.round(allDone/allTasksCount*100):0}%</div><div class="w-full h-1 bg-[#111] rounded-full mt-2"><div class="h-full bg-[#1a1a1a]/60 rounded-full" style="width:${allTasksCount>0?allDone/allTasksCount*100:0}%"></div></div></div><div class="glass rounded-xl p-3"><div class="text-[11px] text-white/40">Productivity</div><div class="text-[16px] font-medium mt-1">${done}/${total}</div><div class="text-[10px] text-white/30 mt-1">Today</div></div></div></div></div>`;
+  let tasksOnlyHtml=list.map(t=>{let p=priorities.find(x=>x.id===t.priority)||priorities[0];return `<div draggable="true" data-id="${t.id}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropTask(event)" ondragend="dragEnd(event)" class="glass rounded-[18px] px-3 py-4 flex gap-2 items-start cursor-move" style="touch-action:pan-y"><span class="drag-handle select-none" title="Drag to reorder">⋮⋮</span><input type="checkbox" ${t.completed?'checked':''} onchange="toggleTask('${t.id}')" class="task-checkbox"><div class="flex-1" onclick="editTask('${t.id}')"><div class="flex items-center gap-2 flex-wrap"><span class="dot" style="background:${p.dot}"></span>${t.emoji?`<span>${t.emoji}</span>`:''}<span class="${t.completed?'line-through opacity-40':''} text-[13px]">${t.text}</span>${t.repeat&&t.repeat!=='none'?`<span class="text-[10px] opacity-40">↻</span>`:''}</div>${t.notes?`<div class="text-[11px] text-white/30 mt-1">${t.notes.slice(0,60)}</div>`:''}${(t.start||t.end)?`<div class="text-[10px] text-white/25 mt-1">🕒 ${t.start||''}${t.end?' – '+t.end:''}</div>`:''}</div></div>`}).join('');
+  let tasksViewHtml='';if(list.length===0) tasksViewHtml=`<div class="glass rounded-[20px] p-4 mb-4"><div class="text-[10px] text-white/30">TASKS • Only your added tasks for ${keyOf(selectedDate)}</div><div class="text-[12px] mt-2 text-white/50">No tasks yet for ${tabs.find(t=>t.id===activeTab)?.name||''}</div></div><div class="flex flex-col items-center justify-center py-16 opacity-40"><div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center text-xl mb-3">—</div><p class="text-[12px]">NO TASKS</p></div>`; else tasksViewHtml=`<div class="glass rounded-[20px] p-4 mb-4"><div class="text-[10px] text-white/30">TASKS • ${total} tasks • ${done} done • ${keyOf(selectedDate)}</div></div>`+tasksOnlyHtml;
+  document.getElementById('homeContent').innerHTML=homeOverview;document.getElementById('taskList').innerHTML=tasksViewHtml;
+  // draw weekly graph
+  setTimeout(()=>{
+    let c=document.getElementById('homeChart');
+    if(!c) return;
+    let ctx=c.getContext('2d');
+    let W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    // grid lines
+    ctx.strokeStyle='rgba(255,255,255,0.06)';
+    ctx.lineWidth=1;
+    for(let i=0;i<=3;i++){let y=20+i*(H-40)/3;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    // bars
+    let barW=W/(weekData.length*2);
+    weekData.forEach((d,i)=>{
+      let x=i*(W/weekData.length)+barW*0.5;
+      let hTotal=(d.total/maxW)*(H-50);
+      let hDone=(d.done/Math.max(1,maxW))*(H-50);
+      // total bar
+      ctx.fillStyle='rgba(91,127,255,0.9)';
+      ctx.beginPath();
+      let r=4;
+      let y=H-20-hTotal;
+      ctx.roundRect(x, y, barW, hTotal, r);
+      ctx.fill();
+      // done bar on top
+      if(d.done>0){
+        ctx.fillStyle='rgba(34,197,94,0.95)';
+        ctx.beginPath();
+        ctx.roundRect(x, H-20-hDone, barW, hDone, r);
+        ctx.fill();
+      }
+    });
+  },0);
+  let allList=[];Object.keys(tasks).forEach(k=>tasks[k].forEach(t=>{let parts=k.split('_');allList.push({...t,date:parts[1],tabId:parts[0]})}));
+  let allTotal=allList.length;let allDoneCount=allList.filter(t=>t.completed).length;
+  let allOverview=`<div class="glass rounded-[20px] p-4 mb-4"><div class="text-[10px] text-white/30 mb-2">ALL TASKS OVERVIEW</div><div class="flex justify-between items-center mb-3"><div><div class="text-[13px]">${allTotal} Total • ${allDoneCount} Done</div></div><div class="text-[18px] font-medium">${allTotal>0?Math.round(allDoneCount/allTotal*100):0}%</div></div><div class="w-full h-1 bg-[#111] rounded-full overflow-hidden"><div class="h-full bg-[#1a1a1a]/60 rounded-full" style="width:${allTotal>0?allDoneCount/allTotal*100:0}%"></div></div></div>`;
+  document.getElementById('allView').innerHTML=allList.length?allOverview+allList.map(t=>{let p=priorities.find(x=>x.id===t.priority)||priorities[0];let tabName=tabs.find(x=>x.id===t.tabId)?.name||'';return `<div class="glass rounded-[18px] px-4 py-3 flex gap-2 items-start"><span class="dot mt-1.5" style="background:${p.dot}"></span><div class="flex-1"><div class="text-[12px]">${t.emoji||''} ${t.text}</div><div class="text-[10px] text-white/30 mt-1">📅 ${t.date} • 📂 ${tabName}</div></div></div>`}).join(''):`<div class="text-center py-20 opacity-50 text-sm">No tasks yet</div>`;
+  document.querySelectorAll('.nav-btn').forEach(b=>{b.style.color=b.dataset.view===currentView?'#fff':'rgba(255,255,255,0.35)'})
+}
+function switchView(v){currentView=v;localStorage.setItem('lcurrentView',v);document.getElementById('homeView').classList.toggle('hidden',v!=='home');document.getElementById('tasksView').classList.toggle('hidden',v!=='tasks');document.getElementById('allView').classList.toggle('hidden',v!=='all');document.getElementById('settingsView').classList.toggle('hidden',v!=='settings');if(v==='settings'){document.getElementById('settingsView').innerHTML=`<h2 class="text-[18px] font-medium mb-1">SETTINGS</h2><p class="text-[10px] text-white/30 mb-6">BLACK GLOSSY EDITION • Auto daily midnight reset</p><div class="space-y-3"><div class="w-full glass rounded-2xl p-4 flex justify-between items-center opacity-60"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-[#1a1a1a]/5 flex items-center justify-center">◐</div><div class="text-left"><div class="text-[12px]">Theme</div><div class="text-[10px] text-white/40">Dark (Default)</div></div></div></div><button onclick="openWeekSheet()" class="w-full glass rounded-2xl p-4 flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-[#1a1a1a]/5 flex items-center justify-center">▦</div><div class="text-left"><div class="text-[12px]">Week starts on</div><div class="text-[10px] text-white/40">${curWeek}</div></div></div><span>›</span></button><div class="glass rounded-2xl p-4"><div class="text-[12px]">Daily Auto Reset</div><div class="text-[10px] text-white/40 mt-1">Tasks auto reset at midnight (phone system time) – Active</div></div><button onclick="openPrintOptions()" class="w-full glass rounded-2xl p-4 flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-[#1a1a1a]/5 flex items-center justify-center">⎙</div><div class="text-left"><div class="text-[12px]">Print tasks</div><div class="text-[10px] text-white/40">PDF</div></div></div><span>›</span></button></div>`;}render();}
+function openTaskSheet(id=null){editingId=id;document.getElementById('overlay').classList.remove('hidden');document.getElementById('taskSheet').classList.remove('hidden');if(id){let t=(tasks[tKey()]||[]).find(x=>x.id===id);document.getElementById('taskSheetTitle').innerText='EDIT TASK';document.getElementById('taskInput').value=t.text;document.getElementById('notesInput').value=t.notes||'';tempP=t.priority||'none';tempE=t.emoji||'';tempS=t.start||'';tempE2=t.end||'';tempRepeat=t.repeat||'none';document.getElementById('delBtn').classList.remove('hidden')}else{document.getElementById('taskSheetTitle').innerText='NEW TASK';document.getElementById('taskInput').value='';document.getElementById('notesInput').value='';tempP='none';tempE='';tempS='';tempE2='';tempRepeat='none';document.getElementById('delBtn').classList.add('hidden')}updateTemp()}
+function updateTemp(){let p=priorities.find(x=>x.id===tempP)||priorities[0];document.getElementById('pDot').style.background=p.dot;document.getElementById('pLabel').innerText=p.label;document.getElementById('eLabel').innerText=tempE||'None';document.getElementById('startLabel').innerText=tempS||'—';document.getElementById('endLabel').innerText=tempE2||'—';let map={none:'No Repeat',daily:'Daily',weekly:'Weekly',monthly:'Monthly'};if(document.getElementById('repeatLabel'))document.getElementById('repeatLabel').innerText=(map[tempRepeat]||'No Repeat')+' ▾'}
+function saveTask(){let txt=document.getElementById('taskInput').value.trim();if(!txt)return;let notes=document.getElementById('notesInput').value;let list=tasks[tKey()]||[];if(editingId){list=list.map(t=>t.id===editingId?{...t,text:txt,notes,priority:tempP,emoji:tempE,start:tempS,end:tempE2,repeat:tempRepeat}:t)}else{list.push({id:Date.now()+'',text:txt,notes,priority:tempP,emoji:tempE,start:tempS,end:tempE2,repeat:tempRepeat,completed:false})}tasks[tKey()]=list;save();closeAll();render()}
+function editTask(id){
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if(el){ el.classList.add('task-click-animate'); setTimeout(()=>el.classList.remove('task-click-animate'),350); }
+  setTimeout(()=>openTaskSheet(id), 120);
+}
+function toggleTask(id){
+  try{
+    const el = document.querySelector(`[data-id="${id}"]`);
+    if(el){ el.style.transition='all 0.35s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.98)'; }
+    setTimeout(()=>{
+      let l=tasks[tKey()]||[];
+      l=l.map(t=>t.id===id?{...t,completed:!t.completed}:t);
+      tasks[tKey()]=l;
+      save();
+      render();
+    }, 130);
+  }catch(e){ console.error(e); let l=tasks[tKey()]||[]; l=l.map(t=>t.id===id?{...t,completed:!t.completed}:t); tasks[tKey()]=l; save(); render(); }
+}function toggleAll(c){let l=tasks[tKey()]||[];l=l.map(t=>({...t,completed:c}));tasks[tKey()]=l;save();render()}
+function deleteCurrent(){
+  if(!editingId) return;
+  let delId=editingId;
+  let foundName='this task';
+  try{
+    Object.keys(tasks).forEach(k=>{
+      (tasks[k]||[]).forEach(x=>{ if(x.id===delId) foundName=x.text; });
+    });
+  }catch(e){}
+  // capture current key for fallback
+  let currentKey=tKey();
+  openConfirmDelete('Delete task?','Delete "'+foundName.replace(/"/g,'&quot;')+'"? This action cannot be undone.',function(){
+    let deleted=false;
+    Object.keys(tasks).forEach(k=>{
+      let arr=tasks[k]||[];
+      let filtered=arr.filter(x=>x.id!==delId);
+      if(filtered.length!==arr.length){ tasks[k]=filtered; deleted=true; }
+    });
+    // also ensure current day array cleaned
+    if(tasks[currentKey]) tasks[currentKey]=tasks[currentKey].filter(x=>x.id!==delId);
+    save();
+    editingId=null;
+    closeAll();
+    render();
+  });
+}
+function closeAll(){document.getElementById('overlay').classList.add('hidden');document.querySelectorAll('#taskSheet,#prioritySheet,#emojiSheet,#clockSheet,#overflowSheet,#tabSheet,#themeSheet,#weekSheet,#repeatSheet,#newTabSheet,#renameTabSheet,#printOptionsSheet,#calendarSheet,#confirmDeleteSheet').forEach(e=>e.classList.add('hidden'))}
+function openPriority(){document.getElementById('overlay').classList.remove('hidden');document.getElementById('prioritySheet').classList.remove('hidden');document.getElementById('priorityList').innerHTML=priorities.map(p=>`<button onclick="selectP('${p.id}')" class="w-full flex justify-between items-center glass rounded-xl px-4 py-3 text-[12px]"><span class="flex items-center gap-3"><span class="dot" style="background:${p.dot}"></span>${p.label}</span>${tempP===p.id?'✓':''}</button>`).join('')}
+function selectP(id){tempP=id;updateTemp();document.getElementById('prioritySheet').classList.add('hidden')}
+function openEmoji(){document.getElementById('overlay').classList.remove('hidden');document.getElementById('emojiSheet').classList.remove('hidden');document.getElementById('emojiCats').innerHTML=Object.keys(allEmojis).map(c=>`<button onclick="showCat('${c}')" class="shrink-0 px-3 py-1.5 rounded-full text-[10px] ${c===curCat?'bg-[#1a1a1a]':'glass'}">${c}</button>`).join('');showCat(curCat)}
+function showCat(c){
+  curCat=c;
+  document.getElementById('emojiCats').innerHTML=Object.keys(allEmojis).map(cat=>`<button onclick="showCat('${cat}')" class="shrink-0 px-3 py-1.5 rounded-full text-[10px] ${cat===curCat?'bg-[#1a1a1a]':'glass'}">${cat}</button>`).join('');
+  let ems=allEmojis[c]||[];
+  document.getElementById('emojiGrid').innerHTML=ems.map(e=>`<button data-e="${e}" onclick="pickEmoji(this.dataset.e)" class="text-[20px] p-1.5 hover:bg-[#111] rounded-xl">${e}</button>`).join('');
+}
+function filterEmoji(q){
+  if(!q){showCat(curCat);return}
+  q=q.toLowerCase().trim();
+  let all=[];Object.values(allEmojis).forEach(a=>all.push(...a));
+  // simple search: filter if query length <2 show first 400, else no real name search so show all matching char
+  let filtered = q ? all.filter(e=>e.includes(q)).slice(0,400) : all.slice(0,400);
+  if(filtered.length===0) filtered = all.slice(0,400);
+  document.getElementById('emojiGrid').innerHTML=filtered.map(e=>`<button data-e="${e}" onclick="pickEmoji(this.dataset.e)" class="text-[20px] p-1.5 hover:bg-[#111] rounded-xl">${e}</button>`).join('');
+}
+function pickEmoji(e){tempE=e;updateTemp();document.getElementById('emojiSheet').classList.add('hidden')}
+function parseTimeStr(str){
+  if(!str||str==='—') return null;
+  try{
+    let m=str.trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if(!m) return null;
+    return {h:parseInt(m[1]), m:parseInt(m[2]), ap:m[3].toUpperCase()};
+  }catch(e){ return null; }
+}
+function openClock(target){
+  clockTarget=target;
+  clockMode='hour';
+  let existing = target==='start' ? tempS : tempE2;
+  let parsed = parseTimeStr(existing);
+  if(parsed){
+    clockH=parsed.h; clockM=parsed.m; clockAP=parsed.ap;
+  } else {
+    // default to current time if empty
+    let now=new Date();
+    let h=now.getHours();
+    clockAP=h>=12?'PM':'AM';
+    clockH=h%12; if(clockH===0) clockH=12;
+    clockM=now.getMinutes();
+  }
+  document.getElementById('overlay').classList.remove('hidden');
+  document.getElementById('clockSheet').classList.remove('hidden');
+  renderClock();
+}
+function setClockMode(m){clockMode=m;renderClock()}
+function setClockAP(ap){clockAP=ap;updateDisplay();}
+function updateDisplay(){
+  let hourEl=document.getElementById('clockHourSpan');
+  let minEl=document.getElementById('clockMinSpan');
+  let apEl=document.getElementById('clockAPDisplay');
+  let hint=document.getElementById('clockModeHint');
+  if(hourEl){
+    hourEl.innerText=String(clockH).padStart(2,'0');
+    hourEl.className='cursor-pointer px-3 py-1 rounded-xl transition-all '+(clockMode==='hour'?'bg-[#1a1a1a] text-white ring-1 ring-white/20':'text-white/60 hover:bg-[#1a1a1a]/5');
+  }
+  if(minEl){
+    minEl.innerText=String(clockM).padStart(2,'0');
+    minEl.className='cursor-pointer px-3 py-1 rounded-xl transition-all '+(clockMode==='minute'?'bg-[#1a1a1a] text-white ring-1 ring-white/20':'text-white/60 hover:bg-[#1a1a1a]/5');
+  }
+  if(apEl) apEl.innerText=clockAP;
+  if(hint) hint.innerText=clockMode==='hour'?'SELECT HOUR - Tap number below':'SELECT MINUTE - Tap number below';
+  let amBtn=document.getElementById('ampmAM');
+  let pmBtn=document.getElementById('ampmPM');
+  if(amBtn){
+    amBtn.classList.remove('bg-[#1a1a1a]','text-white','glass','text-white/60');
+    if(clockAP==='AM'){ amBtn.classList.add('bg-[#1a1a1a]','text-white'); amBtn.style.background='#1a1a1a'; amBtn.style.color='#fff'; }
+    else { amBtn.classList.add('glass'); amBtn.style.background=''; amBtn.style.color=''; amBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all glass text-white/60'; }
+  }
+  if(pmBtn){
+    if(clockAP==='PM'){ pmBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all bg-[#1a1a1a] text-white'; pmBtn.style.background='#1a1a1a'; pmBtn.style.color='#fff'; }
+    else { pmBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all glass text-white/60'; pmBtn.style.background=''; pmBtn.style.color=''; }
+  }
+  // re-apply active state without full re-render glitch
+  if(clockAP==='AM'){
+    if(amBtn){ amBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all bg-[#1a1a1a] text-white'; }
+    if(pmBtn){ pmBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all glass text-white/60'; }
+  }else{
+    if(pmBtn){ pmBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all bg-[#1a1a1a] text-white'; }
+    if(amBtn){ amBtn.className='flex-1 rounded-xl py-2.5 text-[12px] font-medium transition-all glass text-white/60'; }
+  }
+}
+function renderClock(){
+  let dial=document.getElementById('clockDial');
+  if(!dial) return;
+  dial.innerHTML='';
+  updateDisplay();
+  let nums=clockMode==='hour'?[12,1,2,3,4,5,6,7,8,9,10,11]:[0,5,10,15,20,25,30,35,40,45,50,55];
+  nums.forEach((n,i)=>{
+    let ang=(i*30-90)*Math.PI/180;
+    let r=95;
+    let x=130+r*Math.cos(ang);
+    let y=130+r*Math.sin(ang);
+    let el=document.createElement('div');
+    let isActive = clockMode==='hour' ? (clockH===n || (clockH===12 && n===12) ) : (clockM===n);
+    // special: hour 12 matches 12, minute 0 matches 0
+    if(clockMode==='hour' && clockH===12 && n===12) isActive=true;
+    if(clockMode==='hour' && clockH===0 && n===12) isActive=true;
+    el.className='clock-num '+(isActive?'active':'');
+    el.style.left=x+'px';
+    el.style.top=y+'px';
+    el.innerText=String(n).padStart(2,'0');
+    el.onclick=()=>{
+      if(clockMode==='hour'){
+        clockH=n===0?12:n;
+        setClockMode('minute');
+      } else {
+        clockM=n;
+        updateDisplay();
+        renderClock();
+      }
+    };
+    dial.appendChild(el)
+  });
+  // center dot showing selected time
+  let center=document.createElement('div');
+  center.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;background:rgba(255,255,255,0.4);border-radius:50%;';
+  dial.appendChild(center);
+}
+function confirmClock(){
+  let t=String(clockH).padStart(2,'0')+':'+String(clockM).padStart(2,'0')+' '+clockAP;
+  if(clockTarget==='start')tempS=t;else tempE2=t;
+  updateTemp();
+  document.getElementById('clockSheet').classList.add('hidden');
+  // keep overlay if taskSheet is open, otherwise hide
+  let taskSheet=document.getElementById('taskSheet');
+  if(taskSheet && taskSheet.classList.contains('hidden')){
+    document.getElementById('overlay').classList.add('hidden');
+  }
+}
+function closeClock(){
+  document.getElementById('clockSheet').classList.add('hidden');
+  let taskSheet=document.getElementById('taskSheet');
+  if(taskSheet && taskSheet.classList.contains('hidden')){
+    document.getElementById('overlay').classList.add('hidden');
+  } else {
+    // keep overlay for task sheet
+  }
+}
+function openThemeSheet(){ return; }
+
+function getWeekStartOffset(){
+  let map={Sunday:0,Monday:1,Tuesday:2,Wednesday:3,Thursday:4,Friday:5,Saturday:6};
+  return map[curWeek]!==undefined?map[curWeek]:0;
+}
+function refreshSettingsView(){
+  if(typeof currentView!=='undefined' && currentView==='settings'){
+    switchView('settings');
+  }
+}
+function openWeekSheet(){
+  document.getElementById('overlay').classList.remove('hidden');
+  let s=document.getElementById('weekSheet');
+  if(!s){ alert('Week sheet not found'); return; }
+  s.classList.remove('hidden');
+  let opts=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  s.innerHTML=`<div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-4 text-[13px]">WEEK STARTS ON</h3><div class="text-[10px] text-white/30 mb-3">Select any day to start your week</div><div class="space-y-2">${opts.map(o=>`<button onclick="selectWeek('${o}')" class="w-full flex justify-between items-center glass rounded-xl px-4 py-3 text-[12px] ${curWeek===o?'bg-[#111] border border-white/20':''}"><span>${o}</span>${curWeek===o?'✓':''}</button>`).join('')}</div><button onclick="closeAll()" class="w-full glass rounded-xl py-3 mt-3 text-[12px]">Close</button>`;
+}
+function selectWeek(d){
+  curWeek=d;
+  localStorage.setItem('lweek',d);
+  let ws=document.getElementById('weekSheet');
+  if(ws) ws.classList.add('hidden');
+  let ov=document.getElementById('overlay');
+  if(ov) ov.classList.add('hidden');
+  refreshSettingsView();
+  render();
+  setTimeout(()=>{ try{renderCalendar();}catch(e){ console.error(e); } },80);
+}
+
+function openRepeatSheet(){document.getElementById('overlay').classList.remove('hidden');document.getElementById('repeatSheet').classList.remove('hidden');let opts=[{id:'none',label:'No Repeat'},{id:'daily',label:'Daily'},{id:'weekly',label:'Weekly'},{id:'monthly',label:'Monthly'}];document.getElementById('repeatOptions').innerHTML=opts.map(o=>`<button onclick="selectRepeat('${o.id}')" class="w-full flex justify-between items-center glass rounded-xl px-4 py-3 text-[12px] ${tempRepeat===o.id?'bg-[#111]':''}"><span>${o.label}</span>${tempRepeat===o.id?'✓':''}</button>`).join('')}
+function selectRepeat(id){tempRepeat=id;updateTemp();document.getElementById('repeatSheet').classList.add('hidden');document.getElementById('overlay').classList.add('hidden')}
+function openNewTabSheet(){tempNewTabColor=tabColors[tabs.length % tabColors.length];document.getElementById('overlay').classList.remove('hidden');document.getElementById('newTabSheet').classList.remove('hidden');document.getElementById('newTabNameInput').value='';renderNewTabColors();}
+function renderNewTabColors(){document.getElementById('newTabColors').innerHTML=tabColors.map(c=>`<button onclick="selectNewTabColor('${c}')" style="width:36px;height:36px;border-radius:50%;background:${c};border:${tempNewTabColor===c?'3px solid white':'2px solid rgba(255,255,255,0.15)'}" class="hover:scale-110"></button>`).join('')}
+function selectNewTabColor(c){tempNewTabColor=c;renderNewTabColors();}
+function confirmAddTab(){let name=document.getElementById('newTabNameInput').value.trim();if(!name){if(typeof openThemedInfo==='function') openThemedInfo('Enter Name','Enter tab name'); else alert('Enter tab name');return;}let id=Date.now()+'';tabs.push({id,name,color:tempNewTabColor});activeTab=id;save();render();closeAll();}
+function openTabManager(){
+  document.getElementById('overlay').classList.remove('hidden');
+  let s=document.getElementById('tabSheet');s.classList.remove('hidden');
+  s.innerHTML=`<div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><h3 class="font-medium mb-4 text-[13px]">TABS</h3>${tabs.map(t=>`<div class="flex items-center justify-between glass rounded-xl px-4 py-3 mb-2"><span class="flex items-center gap-2 text-[12px]"><span style="width:8px;height:8px;border-radius:50%;background:${t.color};display:inline-block"></span>${t.name} ${activeTab===t.id?'✓':''}</span><div class="flex gap-2"><button onclick="renameTab('${t.id}')" style="position:relative;z-index:20" class="text-[10px] glass px-3 py-1 rounded-full hover:bg-[#1a1a1a] active:scale-95">Rename</button><button onclick="deleteTab('${t.id}')" style="position:relative;z-index:20" class="text-[10px] text-[#ff4444] glass px-3 py-1 rounded-full">Delete</button></div></div>`).join('')}<button onclick="openNewTabSheet()" class="w-full glass rounded-xl py-3 mt-3 text-[12px] bg-[#111]">+ Add new tab</button><div class="mt-4 pt-4 border-t border-white/10"><button onclick="openPrintOptions()" class="w-full glass rounded-xl py-3 text-[12px]">⎙ PRINT – Print to PDF</button></div><button onclick="closeAll()" class="w-full glass rounded-xl py-3 mt-2 text-[12px]">Close</button>`;
+}
+function renameTab(id){
+  let t=tabs.find(x=>x.id===id);
+  if(!t){if(typeof openThemedInfo==='function') openThemedInfo('Not Found','Tab not found'); else alert('Tab not found');return;}
+  tempRenameId=id;
+  document.getElementById('overlay').classList.remove('hidden');
+  document.getElementById('tabSheet').classList.add('hidden');
+  document.getElementById('renameTabSheet').classList.remove('hidden');
+  document.getElementById('renameTabInput').value=t.name;
+  setTimeout(()=>document.getElementById('renameTabInput').focus(),100);
+}
+function confirmRenameTab(){
+  let n=document.getElementById('renameTabInput').value.trim();
+  if(!n){if(typeof openThemedInfo==='function') openThemedInfo('Enter Name','Name cannot be empty'); else alert('Name cannot be empty');return;}
+  if(!tempRenameId) return;
+  tabs=tabs.map(x=>x.id===tempRenameId?{...x,name:n}:x);
+  save();render();closeAll();setTimeout(()=>{openTabManager();},150);
+}
+function deleteTab(id){if(tabs.length<=1){if(typeof openThemedInfo==='function') openThemedInfo('Cannot Delete','At least one tab required'); else {document.getElementById('overlay').classList.remove('hidden');document.getElementById('confirmDeleteSheet').classList.remove('hidden');document.getElementById('confirmDeleteTitle').innerText='Cannot Delete';document.getElementById('confirmDeleteMsg').innerText='At least one tab required';}return;}tabs=tabs.filter(t=>t.id!==id);if(activeTab===id)activeTab=tabs[0].id;save();render();closeAll();}
+
+
+function openOverflow(){document.getElementById('overlay').classList.remove('hidden');let s=document.getElementById('overflowSheet');s.classList.remove('hidden');s.innerHTML=`<div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div><div class="space-y-2"><button onclick="openPrintOptions()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px] bg-[#111]">⎙ PRINT – Print task list to PDF</button><button onclick="toggleAll(true);closeAll()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px]">Mark all completed</button><button onclick="toggleAll(false);closeAll()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px]">Mark all incomplete</button><button onclick="copyYesterday(false);closeAll()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px]">Copy all from yesterday</button><button onclick="copyYesterday(true);closeAll()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px]">Copy incomplete from yesterday</button><button onclick="deleteAllTasks()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px]" style="color:#ff4444">Delete all tasks</button><button onclick="deleteThisList()" class="w-full glass rounded-xl px-4 py-3 text-left text-[12px]" style="color:#ff4444">Delete this list</button></div>`}
+let pendingDeleteAction=null;
+let _origConfirmBtnText='DELETE';
+let _origConfirmBtnBg='#ff4444';
+function openConfirmDelete(title,msg,action){
+  document.getElementById('overlay').classList.remove('hidden');
+  document.getElementById('overflowSheet').classList.add('hidden');
+  document.getElementById('tabSheet').classList.add('hidden');
+  document.getElementById('confirmDeleteSheet').classList.remove('hidden');
+  document.getElementById('confirmDeleteTitle').innerText=title;
+  document.getElementById('confirmDeleteMsg').innerText=msg;
+  let btn=document.getElementById('confirmDeleteBtn');
+  btn.innerText=_origConfirmBtnText;
+  btn.style.background=_origConfirmBtnBg;
+  btn.style.boxShadow='0 8px 24px rgba(255,68,68,0.3)';
+  pendingDeleteAction=action;
+}
+function openThemedInfo(title,msg){
+  document.getElementById('overlay').classList.remove('hidden');
+  document.getElementById('overflowSheet').classList.add('hidden');
+  document.getElementById('tabSheet').classList.add('hidden');
+  document.getElementById('confirmDeleteSheet').classList.remove('hidden');
+  document.getElementById('confirmDeleteTitle').innerText=title;
+  document.getElementById('confirmDeleteMsg').innerText=msg;
+  let btn=document.getElementById('confirmDeleteBtn');
+  btn.innerText='OK';
+  btn.style.background='rgba(255,255,255,0.12)';
+  btn.style.boxShadow='none';
+  pendingDeleteAction=function(){
+    let b=document.getElementById('confirmDeleteBtn');
+    b.innerText=_origConfirmBtnText;
+    b.style.background=_origConfirmBtnBg;
+    b.style.boxShadow='0 8px 24px rgba(255,68,68,0.3)';
+  };
+}
+function closeConfirmDelete(){
+  document.getElementById('confirmDeleteSheet').classList.add('hidden');
+  document.getElementById('overlay').classList.add('hidden');
+  let b=document.getElementById('confirmDeleteBtn');
+  if(b){
+    b.innerText=_origConfirmBtnText;
+    b.style.background=_origConfirmBtnBg;
+    b.style.boxShadow='0 8px 24px rgba(255,68,68,0.3)';
+  }
+  pendingDeleteAction=null;
+}
+function executeConfirmDelete(){if(pendingDeleteAction) pendingDeleteAction();closeConfirmDelete();}
+function deleteThisList(){if(tabs.length<=1){openThemedInfo('Cannot Delete','At least one list required');return;}let tabName=tabs.find(t=>t.id===activeTab)?.name||'this list';openConfirmDelete('Delete this list?','Delete list \"'+tabName+'\"? Full list will be deleted. All tasks inside this list will be removed permanently.',function(){let id=activeTab;tabs=tabs.filter(t=>t.id!==id);Object.keys(tasks).forEach(k=>{if(k.startsWith(id+'_')) delete tasks[k];});if(tabs.length>0) activeTab=tabs[0].id;save();render();closeAll();});}
+function deleteAllTasks(){let tabName=tabs.find(t=>t.id===activeTab)?.name||'this list';openConfirmDelete('Delete all tasks?','Delete ALL tasks in \"'+tabName+'\"? This will delete all tasks in this list for all dates.',function(){Object.keys(tasks).forEach(k=>{if(k.startsWith(activeTab+'_')) delete tasks[k];});tasks[tKey()]=[];save();render();closeAll();});}
+function openPrintOptions(){document.getElementById('overlay').classList.remove('hidden');document.getElementById('overflowSheet').classList.add('hidden');document.getElementById('tabSheet').classList.add('hidden');document.getElementById('printOptionsSheet').classList.remove('hidden');}
+function printViaIframe(htmlContent){
+  try{
+    // Standard level: create hidden iframe for clean A4 print
+    let existing = document.getElementById('printIframe');
+    if(existing) existing.remove();
+    let iframe = document.createElement('iframe');
+    iframe.id='printIframe';
+    iframe.style.position='fixed';
+    iframe.style.left='-10000px';
+    iframe.style.top='0';
+    iframe.style.width='0';
+    iframe.style.height='0';
+    iframe.style.border='0';
+    document.body.appendChild(iframe);
+    let doc = iframe.contentWindow || iframe.contentDocument;
+    let iDoc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+    if(iDoc){
+      iDoc.open();
+      iDoc.write(htmlContent);
+      iDoc.close();
+      setTimeout(()=>{
+        try{
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        }catch(e){
+          console.error('iframe print failed', e);
+          // fallback to main window print
+          let printable=document.getElementById('printableTaskList');
+          let bodyMatch=htmlContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+          let inner=bodyMatch ? bodyMatch[1] : htmlContent;
+          inner=inner.replace(/<script[\s\S]*?<\/script>/gi,'');
+          printable.innerHTML=inner;
+          printable.style.display='block';
+          setTimeout(()=>{ window.print(); setTimeout(()=>{ printable.style.display='none'; }, 800); }, 200);
+        }
+        setTimeout(()=>{ try{ iframe.remove(); }catch(e){} }, 1000);
+      }, 400);
+    } else {
+      throw new Error('no iframe doc');
+    }
+  }catch(err){
+    console.error('Print error', err);
+    try{
+      let w=window.open('', '_blank');
+      if(w){ w.document.write(htmlContent); w.document.close(); w.focus(); setTimeout(()=>w.print(), 400); }
+    }catch(e2){}
+  }
+}
+function doPrintTaskList(){
+  try{
+    let all=[];
+    Object.keys(tasks).forEach(k=>{
+      if(!k.startsWith(activeTab+'_')) return;
+      let arr=tasks[k]||[];
+      arr.forEach(t=>{
+        let parts=k.split('_');
+        all.push({...t, tabName:tabs.find(x=>x.id===activeTab)?.name||'Task', date:parts.slice(1).join('_')||''});
+      });
+    });
+    if(all.length===0){
+      let cur=tasks[tKey()]||[];
+      cur.forEach(t=>all.push({...t, tabName:tabs.find(x=>x.id===activeTab)?.name||'Task', date:keyOf(selectedDate)}));
+    }
+    if(all.length===0){
+      closeAll();
+      document.getElementById('overlay').classList.remove('hidden');
+      document.getElementById('confirmDeleteSheet').classList.remove('hidden');
+      document.getElementById('confirmDeleteTitle').innerText='No Tasks';
+      document.getElementById('confirmDeleteMsg').innerText='No tasks to print - add tasks first';
+      document.getElementById('confirmDeleteBtn').innerText='OK';
+      document.getElementById('confirmDeleteBtn').style.background='rgba(255,255,255,0.12)';
+      document.getElementById('confirmDeleteBtn').style.boxShadow='none';
+      pendingDeleteAction=function(){
+        let btn=document.getElementById('confirmDeleteBtn');
+        btn.innerText='DELETE';
+        btn.style.background='#ff4444';
+        btn.style.boxShadow='0 8px 24px rgba(255,68,68,0.3)';
+      };
+      return;
+    }
+    let listTitle=(tabs.find(t=>t.id===activeTab)?.name||'New list')+' - Task List';
+    let createdDate=new Date().toLocaleDateString();
+    let rows=all.map((t,i)=>`<tr><td style="border:1px solid #ddd;padding:6px;font-size:11px;text-align:center">${t.completed?'☑':'☐'}</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">${t.date||''}</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">${t.text}${t.start||t.end?` (${t.start||''}${t.end?' - '+t.end:''})`:''}</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">${t.priority||'none'}</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">${t.repeat||'none'}</td></tr>`).join('');
+    let htmlContent=`<html><head><meta charset='UTF-8'><title>${listTitle}</title><style>@page{margin:12mm 10mm; size:A4;} *{box-sizing:border-box} body{font-family:Inter,Arial,sans-serif;color:#111;padding:20px 24px;background:#fff;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact} .header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:16px} .header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-0.3px} .meta{font-size:11px;color:#555;text-align:right} table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border:1px solid #d1d5db;padding:8px 10px;font-size:11px;text-align:left;vertical-align:top} th{background:#f3f4f6 !important;font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;color:#111} tr:nth-child(even) td{background:#fafafa !important} .footer{margin-top:20px;padding-top:10px;border-top:1px solid #e5e7eb;font-size:9px;color:#888;text-align:center}</style></head><body><div class='header'><div><h1>${listTitle}</h1><div style='font-size:11px;color:#666;margin-top:4px'>Standard Task Report</div></div><div class='meta'>Created: ${createdDate}<br/>Total: ${all.length} tasks<br/>Date: ${keyOf(selectedDate)}</div></div><table><thead><tr><th style='width:36px;text-align:center'>✓</th><th style='width:90px'>Date</th><th>Task</th><th style='width:80px'>Priority</th><th style='width:70px'>Repeat</th></tr></thead><tbody>${rows}</tbody></table><div class='footer'>Generated by Liquid Glass To-Do • ${createdDate} • Page 1 • Professional Print</div></body></html>`;
+    closeAll();
+    printViaIframe(htmlContent);
+  }catch(e){
+    console.error(e);
+    openThemedInfo('Print Error','Print error: '+e.message);
+  }
+}
+
+function doPrintMonthReport(){
+  try{
+    let year=selectedDate.getFullYear();
+    let month=selectedDate.getMonth();
+    let monthStart=new Date(year, month, 1);
+    let monthEnd=new Date(year, month+1, 0);
+    let monthLabel=selectedDate.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    let all=[];
+    for(let d=1; d<=monthEnd.getDate(); d++){
+      let dateObj=new Date(year, month, d);
+      let key=keyOf(dateObj);
+      let k=activeTab+'_'+key;
+      (tasks[k]||[]).forEach(t=>{
+        all.push({completed:t.completed, date:key, text:t.text, priority:t.priority||'none', repeat:t.repeat||'none', start:t.start||'', end:t.end||''});
+      });
+    }
+    all.sort((a,b)=>a.date.localeCompare(b.date));
+    if(all.length===0){
+      openThemedInfo('No Tasks','No tasks found for '+monthLabel+' in '+(tabs.find(t=>t.id===activeTab)?.name||'this list'));
+      return;
+    }
+    let rows=all.map(t=>`<tr><td style="border:1px solid #ddd;padding:5px;font-size:10px;text-align:center">${t.completed?'☑':'☐'}</td><td style="border:1px solid #ddd;padding:5px;font-size:10px">${t.date}</td><td style="border:1px solid #ddd;padding:5px;font-size:10px">${t.text}${t.start||t.end?` (${t.start||''}${t.end?' - '+t.end:''})`:''}</td><td style="border:1px solid #ddd;padding:5px;font-size:10px">${t.priority}</td><td style="border:1px solid #ddd;padding:5px;font-size:10px">${t.repeat}</td></tr>`).join('');
+    let firstDay=keyOf(monthStart);
+    let lastDay=keyOf(monthEnd);
+    let listTitle=(tabs.find(t=>t.id===activeTab)?.name||'List')+' - '+monthLabel;
+    let htmlContent=`<html><head><meta charset='UTF-8'><title>${listTitle}</title><style>@page{margin:12mm 10mm; size:A4;} *{box-sizing:border-box} body{font-family:Inter,Arial,sans-serif;color:#111;padding:20px 24px;background:#fff;line-height:1.5;-webkit-print-color-adjust:exact} .header{display:flex;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:16px} h1{margin:0;font-size:20px;font-weight:700} .meta{font-size:11px;color:#555;text-align:right} table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border:1px solid #d1d5db;padding:7px 10px;font-size:10px} th{background:#f3f4f6 !important;font-weight:600;text-transform:uppercase;font-size:9px;letter-spacing:0.5px} tr:nth-child(even) td{background:#fafafa !important} .footer{margin-top:18px;border-top:1px solid #e5e7eb;padding-top:8px;font-size:9px;color:#888;text-align:center}</style></head><body><div class='header'><div><h1>${monthLabel} - Full Month Report</h1><div style='font-size:11px;color:#666'>${tabs.find(t=>t.id===activeTab)?.name||''} • Professional Monthly Summary</div></div><div class='meta'>${firstDay} to ${lastDay}<br/>Total: ${all.length} tasks<br/>Printed: ${new Date().toLocaleDateString()}</div></div><table><thead><tr><th style='width:32px;text-align:center'>✓</th><th style='width:90px'>Date</th><th>Task</th><th style='width:70px'>Priority</th><th style='width:60px'>Repeat</th></tr></thead><tbody>${rows}</tbody></table><div class='footer'>Generated by Liquid Glass To-Do • ${monthLabel} • Professional Print • Page 1</div></body></html>`;
+    closeAll();
+    printViaIframe(htmlContent);
+  }catch(e){
+    openThemedInfo('Print Error','Print error: '+e.message);
+    console.error(e);
+  }
+}
+
+function doSharePDF(){let all=[];Object.keys(tasks).forEach(k=>{tasks[k].forEach(t=>{let parts=k.split('_');all.push({...t,tabName:tabs.find(x=>x.id===parts[0])?.name||parts[0],date:parts[1]})})});if(all.length===0){openThemedInfo('No Tasks','No tasks to share');return;}let text=all.map((t,i)=>`${i+1}. [${t.tabName}] ${t.text} - ${t.priority}`).join('\n');if(navigator.share){navigator.share({title:'Task List',text:text}).then(()=>closeAll()).catch(()=>{});}else {openThemedInfo('Task List',text);closeAll();}}
+function copyYesterday(incompleteOnly){
+  let y=new Date(selectedDate); y.setDate(y.getDate()-1);
+  let yesterdayKey=keyOf(y);
+  let k=activeTab+'_'+yesterdayKey;
+  let src=tasks[k]||[];
+  if(src.length===0){
+    let found=false;
+    Object.keys(tasks).forEach(key=>{
+      if(key.endsWith('_'+yesterdayKey) && tasks[key].length>0 && !found){
+        if((tasks[activeTab+'_'+yesterdayKey]||[]).length===0){
+          src=tasks[key];
+          found=true;
+        }
+      }
+    });
+  }
+  if(incompleteOnly) src=src.filter(t=>!t.completed);
+  if(src.length===0){ if(typeof openThemedInfo==='function') openThemedInfo('No Tasks','No tasks found for yesterday ('+yesterdayKey+')'); else alert('No tasks found for yesterday ('+yesterdayKey+')'); return; }
+  let currentKey=tKey();
+  let newTasks=src.map(t=>({...t,id:Date.now()+'_'+Math.random().toString(36).substr(2,9),completed:false}));
+  tasks[currentKey]=[...(tasks[currentKey]||[]),...newTasks];
+  save(); render();
+}
+function openCalendarPicker(){document.getElementById('overlay').classList.remove('hidden');document.getElementById('calendarSheet').classList.remove('hidden');calCurrentMonth=new Date(selectedDate);renderCalendar();}
+function changeCalMonth(delta){calCurrentMonth.setMonth(calCurrentMonth.getMonth()+delta);renderCalendar();}
+function renderCalendar(){
+  let year=calCurrentMonth.getFullYear();
+  let month=calCurrentMonth.getMonth();
+  document.getElementById('calMonthLabel').innerText=calCurrentMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  let firstDayRaw=new Date(year,month,1).getDay();
+  let offset=typeof getWeekStartOffset==='function'?getWeekStartOffset():0;
+  let firstDay=(firstDayRaw - offset + 7) % 7;
+  let daysInMonth=new Date(year,month+1,0).getDate();
+  let baseWeek=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  let headerOrder=[];
+  for(let i=0;i<7;i++){ headerOrder.push(baseWeek[(offset+i)%7]); }
+  let headerEl=document.querySelector('#calendarSheet .grid.grid-cols-7.gap-1.mb-2');
+  if(headerEl){ headerEl.innerHTML=headerOrder.map(h=>`<div>${h}</div>`).join(''); }
+  let grid='';
+  for(let i=0;i<firstDay;i++) grid+=`<div></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    let dateObj=new Date(year,month,d);
+    let key=keyOf(dateObj);
+    let isToday=key===keyOf(new Date());
+    let isSelected=key===keyOf(selectedDate);
+    let hasTasks=Object.keys(tasks).some(k=>k.endsWith('_'+key) && tasks[k].length>0);
+    grid+=`<div class="calendar-day ${isSelected?'active':''} ${isToday?'today':''} ${hasTasks?'has-tasks':''}" onclick="selectCalendarDate(${year},${month},${d})">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML=grid;
+}
+function selectCalendarDate(y,m,d){selectedDate=new Date(y,m,d);try{localStorage.setItem('lselectedDate', selectedDate.toISOString());}catch(e){}closeAll();render();}
+function jumpToDate(type){if(type==='today') selectedDate=new Date(); else if(type==='yesterday'){let d=new Date();d.setDate(d.getDate()-1);selectedDate=d;} else if(type==='tomorrow'){let d=new Date();d.setDate(d.getDate()+1);selectedDate=d;} try{localStorage.setItem('lselectedDate', selectedDate.toISOString());}catch(e){} calCurrentMonth=new Date(selectedDate);closeAll();render();}
+function openDatePicker(){openCalendarPicker();}
+// --- HISTORY ARCHIVE ---
+function getHistory(){try{return JSON.parse(localStorage.getItem('ltasks_history_v2')||'{}')}catch(e){return {}}}
+function saveHistory(h){localStorage.setItem('ltasks_history_v2', JSON.stringify(h))}
+function archiveDay(dayKey){
+  let dayData={};
+  Object.keys(tasks).forEach(k=>{ if(k.endsWith('_'+dayKey)){ dayData[k]=JSON.parse(JSON.stringify(tasks[k])) } });
+  if(Object.keys(dayData).length>0){
+    let hist=getHistory();
+    hist[dayKey]={ archivedAt: new Date().toISOString(), data: dayData };
+    saveHistory(hist);
+  }
+}
+
+// --- RECURRENCE LOGIC ---
+function addDays(d,n){ let nd=new Date(d); nd.setDate(nd.getDate()+n); return nd; }
+function addMonths(d,n){ let nd=new Date(d); nd.setMonth(nd.getMonth()+n); return nd; }
+function parseKeyDate(k){ // k = YYYY-MM-DD
+  let parts=k.split('-'); return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+}
+function ensureNextRecurrenceInstances(upToDate){
+  let today=upToDate;
+  let todayKey=keyOf(today);
+  let yesterday=addDays(today,-1);
+  let yKey=keyOf(yesterday);
+  let weekAgo=addDays(today,-7);
+  let weekAgoKey=keyOf(weekAgo);
+  let monthAgo=addMonths(today,-1);
+  let monthAgoKey=keyOf(monthAgo);
+  let keys=Object.keys(tasks);
+  let newTasksToAdd={};
+  keys.forEach(k=>{
+    let parts=k.split('_');
+    if(parts.length<2) return;
+    let tabId=parts[0];
+    let dateStr=parts.slice(1).join('_');
+    (tasks[k]||[]).forEach(t=>{
+      if(!t.repeat || t.repeat==='none') return;
+      let shouldRepeat=false;
+      if(t.repeat==='daily' && dateStr===yKey) shouldRepeat=true;
+      else if(t.repeat==='weekly' && dateStr===weekAgoKey) shouldRepeat=true;
+      else if(t.repeat==='monthly' && dateStr===monthAgoKey) shouldRepeat=true;
+      if(shouldRepeat){
+        let nextTKey=tabId+'_'+todayKey;
+        if(!newTasksToAdd[nextTKey]) newTasksToAdd[nextTKey]=[];
+        let existsInCurrent=(tasks[nextTKey]||[]).some(x=> x.text===t.text && x.repeat===t.repeat);
+        let existsInPending=newTasksToAdd[nextTKey].some(x=> x.text===t.text && x.repeat===t.repeat);
+        if(!existsInCurrent && !existsInPending){
+          newTasksToAdd[nextTKey].push({
+            id: Date.now()+'_'+Math.random().toString(36).substr(2,9),
+            text: t.text, notes: t.notes||'', priority: t.priority||'none', emoji: t.emoji||'', start: t.start||'', end: t.end||'', repeat: t.repeat, completed: false
+          });
+        }
+      }
+    });
+  });
+  let added=false;
+  Object.keys(newTasksToAdd).forEach(nk=>{
+    if(newTasksToAdd[nk].length>0){
+      if(!tasks[nk]) tasks[nk]=[];
+      tasks[nk]=[...tasks[nk], ...newTasksToAdd[nk]];
+      added=true;
+    }
+  });
+  if(added) save();
+}
+
+function runMidnightAutomation(){
+  let today=new Date();
+  let todayKey=keyOf(today);
+  let yesterday=new Date(today); yesterday.setDate(yesterday.getDate()-1);
+  let yKey=keyOf(yesterday);
+
+  // 1. Archive yesterday if not yet archived
+  try{
+    let hist=getHistory();
+    if(!hist[yKey]){
+      archiveDay(yKey);
+    }
+  }catch(e){ console.warn('Archive failed', e); }
+
+  // 2. Daily reset: for TODAY, uncheck all completed tasks (fresh start)
+  // FIXED: ensures reset actually works even if selectedDate was old
+  Object.keys(tasks).forEach(k=>{
+    if(k.endsWith('_'+todayKey)){
+      tasks[k]=tasks[k].map(t=> ({...t, completed:false}));
+    }
+  });
+
+  // 3. Recurrence auto-shift: generate next instances
+  try{ ensureNextRecurrenceInstances(today); }catch(e){ console.warn(e); }
+
+  // 4. Update selectedDate to today for daily update fix
+  try{
+    let selKey = keyOf(selectedDate);
+    if(selKey !== todayKey){
+      // If user was on yesterday/today view, move to new today automatically for daily update
+      let yesterdayKey = yKey;
+      if(selKey === yesterdayKey || selKey === todayKey || localStorage.getItem('lselectedDate')){
+        selectedDate = new Date(today);
+        localStorage.setItem('lselectedDate', selectedDate.toISOString());
+      }
+    }
+  }catch(e){}
+
+  save();
+}
+
+// --- DAILY CHECK ---
+
+// --- PREMIUM INTERACTION & GLITCH FIXES ---
+(function(){
+  let touchStartY = 0;
+  document.addEventListener('touchstart', e=>{ touchStartY = e.touches[0].clientY; }, {passive:true});
+  // Prevent accidental drag on checkbox click
+  document.addEventListener('click', function(e){
+    if(e.target.classList.contains('task-checkbox') || e.target.classList.contains('drag-handle')){
+      e.stopPropagation();
+    }
+  }, true);
+  // Add smooth entry observer for task list
+  const origRender = window.render;
+  if(origRender){
+    window.render = function(){
+      try{ return origRender.apply(this, arguments); }
+      catch(err){ console.warn('Render glitch recovered', err); try{ origRender(); }catch(e2){} }
+    }
+  }
+  // Fix: prevent double scroll bounce
+  let lastScroll = 0;
+  window.addEventListener('scroll', ()=>{ lastScroll = window.scrollY; }, {passive:true});
+})();
+// Improved drag handling to prevent glitches
+function dragStart(e){
+  try{
+    draggedId = e.currentTarget.dataset.id;
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed='move';
+    e.dataTransfer.setData('text/plain', draggedId);
+    setTimeout(()=>{ if(e.currentTarget) e.currentTarget.style.opacity='0.5'; },0);
+  }catch(err){ draggedId = e.currentTarget.dataset.id; }
+}
+
+function checkMidnightReset(){
+  let lastDate=localStorage.getItem('lastResetDate');
+  let today=keyOf(new Date());
+  if(lastDate!==today){
+    runMidnightAutomation();
+    localStorage.setItem('lastResetDate',today);
+    try{ render(); }catch(e){ console.warn(e); }
+    return true;
+  }
+  return false;
+}
+function startDailyTimers(){
+  // check every 30s for midnight
+  setInterval(()=>{
+    let changed = checkMidnightReset();
+    // also update date label every minute for daily update
+    if(!changed){
+      let lbl = document.getElementById('dateLabel');
+      if(lbl){
+        try{ renderTabs(); document.getElementById('dateLabel').textContent = dateStrFull(selectedDate); }catch(e){}
+      }
+    }
+  },30000);
+  // precise midnight check
+  setInterval(()=>{
+    let now=new Date();
+    if(now.getHours()===0 && now.getMinutes()===0 && now.getSeconds()<20){
+      checkMidnightReset();
+    }
+  },15000);
+  // visibility change - when user comes back next day
+  document.addEventListener('visibilitychange', ()=>{
+    if(!document.hidden){ checkMidnightReset(); }
+  });
+}
+startDailyTimers();
+checkMidnightReset();
+curTheme='Dark';applyTheme('Dark');
+if(savedView){ currentView=savedView; }
+render();
+if(savedView){ switchView(savedView); }
+
+</script>
+<div id="printableTaskList" style="display:none"></div>
+</body></html>
